@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🇬🇧🫖 British Tea Drinking Map
+
+A crowdsourced interactive map for discovering and sharing the best tea drinking spots across the United Kingdom. Users can browse venues on a map, submit new locations with photos and ratings, and help build the definitive guide to British tea culture.
+
+## Features
+
+- Interactive map of the UK powered by Leaflet/OpenStreetMap
+- Click anywhere on the map to submit a new tea spot
+- Categorise venues: Cafe, Tea Room, Hotel, or Chain
+- Upload photos and leave ratings and descriptions
+- Rate limiting to prevent spam (5 submissions per IP per 10 minutes)
+- Data persisted via [Re:earth CMS](https://reearth.io/service/cms)
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org) 16
+- [React](https://react.dev) 19 with TypeScript
+- [Leaflet](https://leafletjs.com) for mapping
+- [Tailwind CSS](https://tailwindcss.com) 4
+- Re:earth CMS as the backend
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+You need a Re:earth CMS project with a model configured for tea spot reports. Copy the example env file and fill in your credentials:
+
+```bash
+cp .env.example .env
+```
+
+Required environment variables (see `.env.example`):
+
+| Variable | Description |
+|---|---|
+| `CMS_BASE_URL` | Re:earth CMS API base URL (default: `https://api.cms.reearth.io`) |
+| `CMS_WORKSPACE_ID` | Your workspace ID |
+| `CMS_PROJECT_ID` | Your project ID |
+| `CMS_MODEL_ID` | The model ID for tea spot reports |
+| `CMS_INTEGRATION_TOKEN` | API integration token |
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm start` | Start production server |
+| `npm run lint` | Run ESLint |
