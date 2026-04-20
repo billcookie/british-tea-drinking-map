@@ -1,3 +1,5 @@
+import { TeaSpot } from "./types";
+
 export function convertFieldsToApiFormat(fields: Record<string, unknown>) {
   const apiFields = [];
 
@@ -71,7 +73,7 @@ export function checkRateLimit(request: Request): Response | null {
 
   if (entry.count >= MAX_REQUESTS) {
     return Response.json(
-      { error: 'Too many requests. Please try again later.' },
+      { error: 'リクエストが多すぎます。しばらくしてからお試しください。' },
       { status: 429 }
     )
   }
@@ -79,3 +81,41 @@ export function checkRateLimit(request: Request): Response | null {
   entry.count++
   return null
 }
+
+export function exportCSV(spots: TeaSpot[]) {
+    const headers = ['名前', 'カテゴリ', '説明', '評価', '緯度', '経度']
+    const rows = spots.map(s => [
+      `"${(s.name || '').replace(/"/g, '""')}"`,
+      `"${(s.category || '').replace(/"/g, '""')}"`,
+      `"${(s.description || '').replace(/"/g, '""')}"`,
+      s.rating || '',
+      s.lat,
+      s.lng,
+    ])
+    const csv = [headers, ...rows].map(r => r.join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'tea-spots.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  export function exportGeoJSON(spots: TeaSpot[]) {
+    const geojson = {
+      type: 'FeatureCollection',
+      features: spots.map(s => ({
+        type: 'Feature',
+        properties: { name: s.name, category: s.category, rating: s.rating, description: s.description },
+        geometry: { type: 'Point', coordinates: [s.lng, s.lat] },
+      })),
+    }
+    const blob = new Blob([JSON.stringify(geojson, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'tea-spots.geojson'
+    a.click()
+    URL.revokeObjectURL(url)
+  }

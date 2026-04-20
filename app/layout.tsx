@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Best British Tea Drinking Spots Map",
-  description: "A map of the best tea drinking spots across the UK, crowdsourced from tea lovers like you!",
+  title: "イギリスの紅茶スポットマップ",
+  description: "紅茶好きがクラウドソーシングした、英国各地のおすすめ紅茶スポットのマップです。",
 };
 
 export default function RootLayout({
@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ja"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>

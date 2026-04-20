@@ -2,13 +2,15 @@
 
 import { SubmitEvent, useState } from 'react'
 import 'leaflet/dist/leaflet.css'
+import { TeaSpot } from '../types'
 
 interface TeaSpotFormProps {
   selectedLocation: { lat: number; lng: number } | null
   setSelectedLocation: React.Dispatch<React.SetStateAction<{ lat: number; lng: number } | null>>
+  onSpotAdded?: (spot: TeaSpot) => void
 }
 
-export default function TeaSpotForm({ selectedLocation, setSelectedLocation }: TeaSpotFormProps) {
+export default function TeaSpotForm({ selectedLocation, setSelectedLocation, onSpotAdded }: TeaSpotFormProps) {
   const [status, setStatus] = useState('')
   const [pending, setPending] = useState(false)
 
@@ -59,6 +61,16 @@ export default function TeaSpotForm({ selectedLocation, setSelectedLocation }: T
       const result = await res.json()
       if (result.success) {
         setStatus('投稿が完了しました！')
+        onSpotAdded?.({
+          id: result.data?.id ?? '',
+          name: (formData.get('name') as string) || '',
+          category: (formData.get('category') as string) || '',
+          description: (formData.get('description') as string) || '',
+          rating: Number(formData.get('rating')) || 0,
+          lat: selectedLocation.lat,
+          lng: selectedLocation.lng,
+          photos: [],
+        })
         form.reset()
         setSelectedLocation(null)
       } else {
@@ -92,16 +104,16 @@ export default function TeaSpotForm({ selectedLocation, setSelectedLocation }: T
         />
 
         <select name="category" className={fieldClass}>
-          <option value="" className="bg-gray-800">Select category</option>
-          <option value="Cafe" className="bg-gray-800">Cafe</option>
-          <option value="Tea Room" className="bg-gray-800">Tea Room</option>
-          <option value="Hotel" className="bg-gray-800">Hotel</option>
-          <option value="Chain" className="bg-gray-800">Chain</option>
+          <option value="" className="bg-gray-800">カテゴリを選択</option>
+          <option value="Cafe" className="bg-gray-800">カフェ</option>
+          <option value="Tea Room" className="bg-gray-800">ティールーム</option>
+          <option value="Hotel" className="bg-gray-800">ホテル</option>
+          <option value="Chain" className="bg-gray-800">チェーン</option>
         </select>
 
         <textarea
           name="description"
-          placeholder="Description"
+          placeholder="説明"
           rows={3}
           className={fieldClass}
         />
@@ -116,7 +128,7 @@ export default function TeaSpotForm({ selectedLocation, setSelectedLocation }: T
         />
 
         <label className="flex flex-col gap-1">
-          <span className="text-xs text-gray-400">Photos</span>
+          <span className="text-xs text-gray-400">写真</span>
           <input
             type="file"
             multiple
@@ -130,11 +142,11 @@ export default function TeaSpotForm({ selectedLocation, setSelectedLocation }: T
           disabled={pending}
           className="w-full rounded-md bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-800 disabled:cursor-not-allowed text-white font-medium py-2 text-sm transition-colors"
         >
-          {pending ? 'Submitting…' : 'Submit'}
+          {pending ? '送信中…' : '送信'}
         </button>
 
         <p className="text-xs text-gray-500 text-center">
-          Click the map to set location
+          地図をクリックして位置を設定してください
         </p>
 
         {status && (
