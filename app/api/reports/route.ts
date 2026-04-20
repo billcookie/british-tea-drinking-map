@@ -32,15 +32,13 @@ export async function POST(request: Request) {
   }
 
   const data = await response.json()
-
-  const publishUrl = `${process.env.CMS_BASE_URL}/api/items/${data.id}/publish`
+  const publishUrl = `${process.env.CMS_BASE_URL}/api/${process.env.CMS_WORKSPACE_ID}/projects/${process.env.CMS_PROJECT_ID}/models/${process.env.CMS_MODEL_ID}/items/${data.id}/publish`
   await fetch(publishUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ status: 'PUBLIC' }),
   })
 
   return Response.json({ success: true, data }, { status: 201 })
